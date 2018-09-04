@@ -49,11 +49,11 @@ model.add(Conv1D(32,1,activation='relu'))
 model.add(Flatten())
 model.add(Dense(1))
 
-save = ModelCheckpoint('model.h5',monitor='val_loss',save_best_only=True,mode='min')
-early = EarlyStopping(monitor='val_loss',mode='min',patience=5)
-model.compile(optimizer='adam',loss='mse')
+# save = ModelCheckpoint('model.h5',monitor='val_loss',save_best_only=True,mode='min')
+# early = EarlyStopping(monitor='val_loss',mode='min',patience=5)
+# model.compile(optimizer='adam',loss='mse')
 
-model.fit(X_train,y_train,validation_data=(X_test,y_test),verbose=1,batch_size=64,epochs=100,callbacks=[early,save])
+# model.fit(X_train,y_train,validation_data=(X_test,y_test),verbose=1,batch_size=64,epochs=100,callbacks=[early,save])
 
 
 #The underlying code is for creaating the sbmission,
@@ -62,11 +62,15 @@ model.fit(X_train,y_train,validation_data=(X_test,y_test),verbose=1,batch_size=6
 from keras.models import load_model 
 model = load_model('model.h5')
 pred = model.predict(X_testing)
+pred = pred.reshape(-1,)
 prediction = []
 for a in pred:
     prediction.append(np.expm1(a))
-sub = pandas.read_csv('test.csv')
-sub['price'] = prediction 
+print(prediction)
+sub = pandas.DataFrame()
+sub['price'] = prediction
+print(sub.head()) 
 writer = pandas.ExcelWriter('submit.xlsx')
 sub.to_excel(writer,index=False)
 writer.save()
+#The score with this model out of 1 was 0.78247318 and I was placed at 63rd position.
