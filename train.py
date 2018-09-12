@@ -22,11 +22,50 @@ print("Shape of the dataset is : ==>:",train.shape)
 #Listing all the unique values in each column
 a = [list(train[a].unique()) for a in train.columns]
 print("Unique values in AREA_TYPE column (not converted to int): ==>:",a[0])
+new_area = {}
+for b in a[0]:
+    if b =="Super built-up  Area":
+        new_area[b] = 4
+    elif b=="Plot  Area":
+        new_area[b] = 1
+    elif b=="Built-up  Area":
+        new_area[b] = 3
+    else:
+        new_area[b] = 2
+#In the above for loop, I am converting the four area types to integers, I have just used
+#my intution to decide which has to be weighed more than other. I know it is not good, as
+#I am not letting the algorithm to decide which is better, but since I am will be trying
+#both machine learning approaches involving neural networks and non-neural networks because 
+#many people still don't get it why we use neural network
+#I will slowly increase dimensions for both non-neural netwroks and neural networks and see 
+#what happens.
+print("Unique values in area_type converted to int: ==>:",new_area)
 print("Unique values in availability column (not converted to int): ==>:",a[1])
+new_avail = {}
+for b in a[1]:
+    if b=="Ready To Move":
+        new_avail[b] = 1
+    else:
+        new_avail[b] = 0
+#In the above for loop I am setting all the values equal to ready to move to 1
+#And all the values not equal to "READY TO MOVE" to 0, because if a value is not
+#ready to move, i.e it can be any date, like 19-AUG, but we don't know at what point of
+#time is the ounting of date starting? i.e we don't know what is the refernce date to which 
+#we are comparing it to. If the year was mentioned we could have taken a day before the least
+#date as the reference date but it is not mentioned, so it is obvious to make all the dates
+#to zero. As most of them would prefer READY TO MOVE.
+print("Unique values in availability converted to int: ==>:",new_avail)
+
 #print(a[2]) is not required, because the location can't be numerically understood as of now, 
 #therefore we will preserve it for later.
-#For seperating number of bedrooms to only integer instead of BHK and Bedroom 
-print("Unique values in rooms column(converted to int): ==>:",[str(a[3][i]).split()[0] for i in range(len(a[3]))])
+#For seperating number of bedrooms to only integer instead of BHK and Bedroom
+print(a[3]) 
+room = [str(a[3][i]).split()[0] for i in range(len(a[3]))]
+new_room = {}
+for ind,b in enumerate(a[3]):
+    new_room[b] = room[ind]
+print("Unique values in rooms converted to int: ==>:",new_room)
+
 #Getting the index of all the unique size of the property with values other than sqft,
 #i.e Acres,Yards...etc
 strs = []
@@ -44,9 +83,10 @@ for i in range(len(a[5])):
 print("Length of unique values with dimensions other than sq.ft",len(strs))        
 print("Values of unique values in total_sqft with dimensions other than sq.ft",[a[5][i] for i in strs])
 
-#By now I have almost planned how to convert rooms to int and also most of total_sqft, and
-#area_type(only use index for each area_type) and two columns are already numbers,location and
-#society are avoided as of now, all that is left is availability.
+
+#Today I have converted almost all the columns to int and have converted
+#them to dictionary, to map it to the data easily. Only thing left to be converted
+#to int is total_sqft, which is almost done except for yards and stuff.
 
 
 """train = train.drop(['area_type','availability','location','size','society','total_sqft'],axis=1)
