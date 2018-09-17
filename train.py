@@ -8,7 +8,7 @@ print(train.shape)
 #Here I will be dropping all the nan values if they are in any columns,
 #because if you look at unique values in train set(after removing nan) and test set(without)
 #removing nan, then the values in test set is sub set of values in train set(after rmoving nan)
-#and that is trus 95% of the times, and hence I would prefer to just drop, all nan's
+#and that is true 95% of the times, and hence I would prefer to just drop, all nan's
 #instead of filling it with values which aren't right(which is my intution, for example, mean
 #of the columns, etc)
 #>>>>> You can chck the above thing by replacing train with test in the variable
@@ -82,11 +82,35 @@ for i in range(len(a[5])):
             strs.append(i)
 print("Length of unique values with dimensions other than sq.ft",len(strs))        
 print("Values of unique values in total_sqft with dimensions other than sq.ft",[a[5][i] for i in strs])
+new_sqft = []
+not_sqft = [a[5][i] for i in strs]
+for ind,a in enumerate(not_sqft):
+    index = a.find('Sq. Meter')
+    if index!=-1:
+        num = float(a[:index])
+        num = num*10.7639
+        new_sqft.append(num)
+        continue 
+    index = a.find('Sq. Yards')
+    if index!=-1:
+        num = float(a[:index])
+        num = num*9
+        new_sqft.append(num) 
+        continue
+    index = a.find('Acres')
+    if index!=-1:
+        num = float(a[:index])
+        num = num*43560 
+        new_sqft.append(num)
+        continue 
+print("Now all the unique values in total_sqft are converted to sq. ft",new_sqft)
 
 
-#Today I have converted almost all the columns to int and have converted
-#them to dictionary, to map it to the data easily. Only thing left to be converted
-#to int is total_sqft, which is almost done except for yards and stuff.
+
+
+#Today I was only able to do till converting yards and sq meter to total_sqft.
+#Finally back to solving this problem after my internal examination and a hackathon (WNS-analytics wizard)
+
 
 
 """train = train.drop(['area_type','availability','location','size','society','total_sqft'],axis=1)
